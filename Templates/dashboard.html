@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<h1>Inventory Dashboard</h1>
+
+<div class="menu">
+    <a href="/add">Add Product</a>
+    <a href="/sales">Sales History</a>
+</div>
+
+<h2>Product List</h2>
+
+<input type="text" id="productSearch" placeholder="Search products..." style="margin:20px auto;display:block;max-width:400px;width:100%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+
+<table id="productTable">
+<tr>
+<th>ID</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Price</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+{% for product in products %}
+<tr>
+<td>{{ product.id }}</td>
+<td>{{ product.name }}</td>
+<td>{{ product.quantity }}</td>
+<td>{{ product.price }}</td>
+<td>
+{% if product.quantity < 5 %}
+<span class="low-stock">Low Stock</span>
+{% else %}
+<span class="in-stock">In Stock</span>
+{% endif %}
+</td>
+<td>
+<button onclick="openSellModal({{ product.id }}, {{ product.name }}, {{ product.quantity }})">Sell</button>
+</td>
+</tr>
+{% endfor %}
+</table>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+document.getElementById('productSearch').addEventListener('input', function() {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#productTable tr');
+    for (let i = 1; i < rows.length; i++) {
+        const rowText = rows[i].innerText.toLowerCase();
+        rows[i].style.display = rowText.includes(filter) ? '' : 'none';
+    }
+});
+</script>
+
+<!-- Sell Modal -->
+<div id="sellModal" style="display:none;position:fixed;z-index:10000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);align-items:center;justify-content:center;">
+  <div style="background:#fff;padding:32px 24px;border-radius:12px;max-width:350px;width:90vw;margin:auto;position:relative;top:10vh;box-shadow:0 4px 32px #888;">
+    <span style="position:absolute;top:8px;right:16px;cursor:pointer;font-size:1.5em;" onclick="closeSellModal()">&times;</span>
+    <h3>Sell Product</h3>
+    <form id="sellForm" onsubmit="return sellProductAjax(event)">
+      <input type="hidden" id="sellProductId" name="product_id">
+      <div><b id="sellProductName"></b> (<span id="sellProductStock"></span> in stock)</div>
+      <label>Quantity:</label>
+      <input type="number" id="sellQuantity" name="quantity" min="1" required style="width:100%;margin-bottom:12px;">
+      <button type="submit">Sell</button>
+    </form>
+  </div>
+</div>
+
+<script>
+function openSellModal(id, name, quantity) {
+    const modal = document.getElementById('sellModal');
+    document.getElementById('sellProductId').value = id;
+    document.getElementById('sellProductName').innerText = name;
+    document.getElementById('sellProductStock').innerText = quantity;
+    document.getElementById('sellQuantity').value = '';
+    modal.style.display = 'block';
+}
+function closeSellModal() {
+    document.getElementById('sellModal').style.display = 'none';
+}
+window.onclick = function(event) {
+    const modal = document.getElementById('sellModal');
+    if (event.target == modal) modal.style.display = 'none';
+}
+</script>
+
+<script>
+// Add Sell buttons to each row
+const table = document.getElementById('productTable');
+for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const id = row.cells[0].innerText;
+    const name = row.cells[1].innerText;
+    const qty = row.cells[2].innerText;
+    let btn = document.createElement('button');
+    btn.innerText = 'Sell';
+    btn.onclick = () => openSellModal(id, name, qty);
+    let td = document.createElement('td');
+    td.appendChild(btn);
+    row.appendChild(td);
+}
+// Add header
+let th = document.createElement('th');
+th.innerText = 'Action';
+table.rows[0].appendChild(th);
+
+// AJAX sell
+function sellProductAjax(e) {
+    e.preventDefault();
+    const id = document.getElementById('sellProductId').value;
+    const qty = document.getElementById('sellQuantity').value;
+    fetch('/sell', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `product_id=${id}&quantity=${qty}`
+    })
+    .then(r => r.ok ? r.text() : Promise.reject('Failed'))
+    .then(() => {
+        showToast('Product sold!', 'success');
+        closeSellModal();
+        setTimeout(() => location.reload(), 800);
+    })
+    .catch(() => showToast('Error selling product', 'error'));
+    return false;
+}
+</script>
+
+<canvas id="revenueChart" style="max-width:600px;width:100%;margin:32px auto;display:block;"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch('/api/daily_revenue').then(r=>r.json()).then(data=>{
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: data.labels,
+      datasets: [{
+        label: 'Daily Revenue',
+        data: data.values,
+        backgroundColor: '#4CAF50',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+/* ===== General Styles ===== */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* ===== Buttons ===== */
+button {
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #4CAF50 60%, #43e97b 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px #b0b0b0;
+    transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+    background: linear-gradient(90deg, #45a049 60%, #43e97b 100%);
+    transform: translateY(-2px) scale(1.04);
+}
+
+/* ===== Forms ===== */
+form {
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 24px 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px #b0b0b0;
+    transition: box-shadow 0.3s;
+}
+form:hover {
+    box-shadow: 0 8px 32px #a0a0a0;
+}
+
+/* Card effect for forms */
+form {
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #ccc;
+}
+
+input, select {
+    padding: 10px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* ===== Tables ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0px 0px 10px #ccc;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    letter-spacing: 1px;
+    font-size: 1.05em;
+}
+
+tr:hover td {
+    background: #f1f8e9;
+}
+
+/* ===== Toast Notification ===== */
+.toast {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    min-width: 200px;
+    background: #333;
+    color: #fff;
+    padding: 16px 24px;
+    border-radius: 8px;
+    opacity: 0;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.5s, transform 0.5s;
+    transform: translateY(-20px);
+    font-size: 1rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.toast.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+.toast-success { background: #4CAF50; }
+.toast-error { background: #e74c3c; }
+.toast-info { background: #3498db; }
+
+/* ===== Menu Links ===== */
+.menu a {
+    display: inline-block;
+    margin: 0 12px;
+    padding: 8px 18px;
+    color: #4CAF50;
+    background: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px #e0e0e0;
+}
+.menu a:hover {
+    background: #4CAF50;
+    color: #fff;
+}
+
+/* ===== Scroll to Top Button ===== */
+#scrollTopBtn {
+    background: #3498db;
+    color: #fff;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 1.5em;
+    box-shadow: 0 2px 8px #b0b0b0;
+    border: none;
+    transition: background 0.2s, transform 0.2s;
+    z-index: 10000;
+}
+#scrollTopBtn:hover {
+    background: #217dbb;
+    transform: scale(1.1);
+}
+
+/* ===== Responsive Design ===== */
+@media screen and (max-width: 600px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+    }
+
+    th, td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    th::before, td::before {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        font-weight: bold;
+    }
+
+    tr {
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 700px) {
+    body, html {
+        font-size: 1.1em;
+        padding: 4px;
+    }
+    .menu {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+    .menu a {
+        font-size: 1.1em;
+        padding: 14px 0;
+        border-radius: 10px;
+        margin: 0;
+    }
+    table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+    }
+    th, td {
+        text-align: left;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 1.1em;
+    }
+    tr {
+        margin-bottom: 18px;
+        box-shadow: 0 2px 8px #e0e0e0;
+        border-radius: 10px;
+        background: #fff;
+    }
+    #productSearch {
+        font-size: 1.2em;
+        padding: 14px;
+        border-radius: 10px;
+    }
+    button, #scrollTopBtn {
+        font-size: 1.2em;
+        padding: 16px 0;
+        border-radius: 12px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    #sellModal > div {
+        width: 98vw !important;
+        max-width: 98vw !important;
+        left: 1vw;
+        right: 1vw;
+        padding: 18px 4px !important;
+    }
+}
